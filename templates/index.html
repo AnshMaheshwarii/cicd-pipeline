@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DevOps Deployment Dashboard</title>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.47.0/iconfont/tabler-icons.min.css" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+
+  <div class="dashboard">
+
+    <header class="topbar">
+      <div class="topbar-brand">
+        <i class="ti ti-terminal-2" aria-hidden="true"></i>
+        DevOps Deployment Dashboard
+      </div>
+      <div class="topbar-status mono">
+        <span class="dot dot-success"></span>
+        operational
+      </div>
+    </header>
+
+    <section class="hero">
+      <h1>DevOps Deployment Dashboard</h1>
+      <p>Continuous integration and delivery, automated end to end and monitored in real time.</p>
+      <div class="hero-badge mono">
+        <span class="dot dot-success"></span>
+        production &middot; healthy
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="overview-grid">
+        {% for item in overview %}
+        <div class="card metric-card">
+          <div class="metric-label">{{ item.label }}</div>
+          <div class="metric-value {{ 'mono' if item.mono }} {{ 'success' if item.highlight }}">{{ item.value }}</div>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Service health</h2>
+      <p class="section-sub">Live status across the toolchain</p>
+      <div class="services-grid">
+        {% for service in services %}
+        <div class="card service-card">
+          <i class="ti {{ service.icon }}" aria-hidden="true"></i>
+          <div class="service-name">{{ service.name }}</div>
+          <div class="badge mono">
+            <span class="dot dot-success"></span>healthy
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="stats-grid">
+        <div class="card stat-card">
+          <div class="stat-label">Uptime, last 7 days</div>
+          <div class="stat-value-row">
+            <span class="stat-value mono">99.97%</span>
+            <span class="stat-delta success">+0.04% wow</span>
+          </div>
+          <svg viewBox="0 0 560 70" class="uptime-chart" role="img" aria-label="Uptime trend line chart showing stable performance near 100 percent over 7 days">
+            <defs>
+              <linearGradient id="ug" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#8b8dfb" stop-opacity="0.18"></stop>
+                <stop offset="100%" stop-color="#8b8dfb" stop-opacity="0"></stop>
+              </linearGradient>
+            </defs>
+            <polygon points="{{ uptime_points }} 560,70 0,70" fill="url(#ug)"></polygon>
+            <polyline points="{{ uptime_points }}" fill="none" stroke="#8b8dfb" stroke-width="1.8"></polyline>
+            <line x1="0" y1="62" x2="560" y2="62" stroke="#1e1e22" stroke-width="1"></line>
+          </svg>
+          <div class="axis-labels">
+            {% for day in uptime_days %}<span>{{ day }}</span>{% endfor %}
+          </div>
+        </div>
+
+        <div class="card stat-card">
+          <div class="stat-label">Deploy frequency</div>
+          <div class="stat-value-row">
+            <span class="stat-value mono">14</span>
+            <span class="stat-delta muted">this week</span>
+          </div>
+          <div class="bars">
+            {% for height in deploy_frequency %}
+            <div class="bar {{ 'bar-accent' if loop.last }}" style="height: {{ height }}%;"></div>
+            {% endfor %}
+          </div>
+          <div class="axis-labels">
+            {% for label in deploy_frequency_labels %}<span>{{ label }}</span>{% endfor %}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>CI/CD pipeline</h2>
+      <p class="section-sub">Automated flow from commit to production</p>
+      <div class="card pipeline">
+        {% for stage in pipeline %}
+        <div class="pipeline-stage {{ 'pipeline-stage-end' if loop.last }}">{{ stage }}</div>
+        {% if not loop.last %}<i class="ti ti-arrow-right pipeline-arrow" aria-hidden="true"></i>{% endif %}
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Infrastructure overview</h2>
+      <p class="section-sub">Layers behind the deployment</p>
+      <div class="architecture-grid">
+        {% for layer in architecture %}
+        <div class="card arch-card">
+          <i class="ti {{ layer.icon }}" aria-hidden="true"></i>
+          <div class="arch-title">{{ layer.title }}</div>
+          <div class="arch-tool">{{ layer.tool }}</div>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Recent deployment activity</h2>
+      <p class="section-sub">Latest pipeline events</p>
+      <div class="card activity-list">
+        {% for item in activity %}
+        <div class="activity-item">
+          <span class="dot dot-{{ item.status }}"></span>
+          <div class="activity-content">
+            <div class="activity-text">{{ item.text_html | safe }}</div>
+            <div class="activity-meta mono">{{ item.meta }}</div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="footer-line">CI/CD Pipeline Automation Project</div>
+      <div class="footer-credit">&copy; 2026 &nbsp;&middot;&nbsp; Developed by Ansh Maheshwari</div>
+    </footer>
+
+  </div>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
