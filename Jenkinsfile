@@ -6,7 +6,7 @@ pipeline {
         stage('Environment Check') {
             steps {
                 bat 'git --version'
-                bat 'python --version'
+                bat '"C:\\Users\\anshk\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" --version'
                 bat 'java -version'
                 bat 'docker --version'
             }
@@ -20,13 +20,13 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                bat 'python -m pip install -r requirements.txt'
+                bat '"C:\\Users\\anshk\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" -m pip install -r requirements.txt'
             }
         }
 
         stage('Run Tests') {
             steps {
-                bat 'pytest'
+                bat '"C:\\Users\\anshk\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" -m pytest'
             }
         }
 
@@ -34,6 +34,21 @@ pipeline {
             steps {
                 bat 'docker build -t cicd-dashboard .'
             }
+        }
+
+    }
+
+    post {
+        success {
+            echo '🎉 Pipeline completed successfully!'
+        }
+
+        failure {
+            echo '❌ Pipeline failed.'
+        }
+
+        always {
+            echo 'Pipeline execution finished.'
         }
     }
 }
