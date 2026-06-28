@@ -18,17 +18,18 @@ pipeline {
             }
         }
 
-        stage('Install Dependencies') {
-            steps {
-                bat '"C:\\Users\\anshk\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" -m pip install -r requirements.txt'
-            }
-        }
+       stage('Install Dependencies') {
+    steps {
+        bat '"C:\\Users\\anshk\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" -m pip install -r requirements.txt'
+        bat '"C:\\Users\\anshk\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" -m pip install -r requirements-dev.txt'
+    }
+}
 
-        stage('Run Tests') {
-            steps {
-                bat '"C:\\Users\\anshk\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" -m pytest'
-            }
-        }
+stage('Run Tests') {
+    steps {
+        bat '"C:\\Users\\anshk\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" -m pytest'
+    }
+}
 
         stage('Build Docker Image') {
             steps {
