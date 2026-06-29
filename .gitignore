@@ -1,25 +1,16 @@
+# Python
 __pycache__/
 *.pyc
-*.pyo
-*.pyd
-.Python
-*.egg-info/
-*.egg
-
 venv/
-env/
-.venv/
-ENV/
 
-.env
-.flaskenv
+# Terraform
+**/.terraform/*
+*.tfstate
+*.tfstate.*
 
+# VS Code
 .vscode/
-.idea/
-*.swp
 
+# OS
 .DS_Store
 Thumbs.db
-
-instance/
-*.log
