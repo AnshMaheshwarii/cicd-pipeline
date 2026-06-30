@@ -1,6 +1,13 @@
 pipeline {
     agent any
 
+    environment {
+        AWS_REGION = 'ap-south-1'
+        AWS_ACCOUNT_ID = '323960980728'
+        ECR_REPO = 'cicd-dashboard'
+        IMAGE_TAG = 'latest'
+    }
+
     stages {
 
         stage('Environment Check') {
@@ -9,6 +16,7 @@ pipeline {
                 bat '"C:\\Users\\anshk\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" --version'
                 bat 'java -version'
                 bat 'docker --version'
+                bat 'aws --version'
             }
         }
 
@@ -18,18 +26,18 @@ pipeline {
             }
         }
 
-       stage('Install Dependencies') {
-    steps {
-        bat '"C:\\Users\\anshk\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" -m pip install -r requirements.txt'
-        bat '"C:\\Users\\anshk\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" -m pip install -r requirements-dev.txt'
-    }
-}
+        stage('Install Dependencies') {
+            steps {
+                bat '"C:\\Users\\anshk\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" -m pip install -r requirements.txt'
+                bat '"C:\\Users\\anshk\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" -m pip install -r requirements-dev.txt'
+            }
+        }
 
-stage('Run Tests') {
-    steps {
-        bat '"C:\\Users\\anshk\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" -m pytest'
-    }
-}
+        stage('Run Tests') {
+            steps {
+                bat '"C:\\Users\\anshk\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" -m pytest'
+            }
+        }
 
         stage('Build Docker Image') {
             steps {
@@ -37,15 +45,33 @@ stage('Run Tests') {
             }
         }
 
+        stage('Push to Amazon ECR') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'aws-creds',
+                    usernameVariable: 'AWS_ACCESS_KEY_ID',
+                    passwordVariable: 'AWS_SECRET_ACCESS_KEY'
+                )]) {
+
+                    bat '''
+                    aws ecr get-login-password --region %AWS_REGION% | docker login --username AWS --password-stdin %AWS_ACCOUNT_ID%.dkr.ecr.%AWS_REGION%.amazonaws.com
+
+                    docker tag cicd-dashboard:latest %AWS_ACCOUNT_ID%.dkr.ecr.%AWS_REGION%.amazonaws.com/%ECR_REPO%:%IMAGE_TAG%
+
+                    docker push %AWS_ACCOUNT_ID%.dkr.ecr.%AWS_REGION%.amazonaws.com/%ECR_REPO%:%IMAGE_TAG%
+                    '''
+                }
+            }
+        }
     }
 
     post {
         success {
-            echo '🎉 Pipeline completed successfully!'
+            echo 'Pipeline completed successfully!'
         }
 
         failure {
-            echo '❌ Pipeline failed.'
+            echo 'Pipeline failed.'
         }
 
         always {
