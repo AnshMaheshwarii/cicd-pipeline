@@ -75,7 +75,7 @@ pipeline {
                     bat '''
                     aws ecs update-service ^
                       --cluster test-cluster ^
-                      --service cicd-dashboard-service ^
+                      --service cicd-dashboard-service-tdq1moe6 ^ 
                       --force-new-deployment ^
                       --region %AWS_REGION%
                     '''
