@@ -3,12 +3,11 @@ from flask import Flask, render_template
 app = Flask(__name__)
 
 OVERVIEW = [
-    {"label": "Current version", "value": "v1.0.0", "mono": True},
+    {"label": "Current version", "value": "v2.0.0", "mono": True},
     {"label": "Build status", "value": "Success", "mono": False, "highlight": True},
     {"label": "Environment", "value": "Production", "mono": False},
     {"label": "Last deployment", "value": "Today, 14:02", "mono": False},
 ]
-
 SERVICES = [
     {"name": "GitHub", "icon": "ti-brand-github"},
     {"name": "Jenkins", "icon": "ti-cube"},
