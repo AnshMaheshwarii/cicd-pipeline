@@ -64,7 +64,24 @@ pipeline {
             }
         }
     }
+stage('Deploy to ECS') {
+    steps {
+        withCredentials([usernamePassword(
+            credentialsId: 'aws-creds',
+            usernameVariable: 'AWS_ACCESS_KEY_ID',
+            passwordVariable: 'AWS_SECRET_ACCESS_KEY'
+        )]) {
 
+            bat '''
+            aws ecs update-service ^
+              --cluster test-cluster ^
+              --service cicd-dashboard-service ^
+              --force-new-deployment ^
+              --region %AWS_REGION%
+            '''
+        }
+    }
+}
     post {
         success {
             echo 'Pipeline completed successfully!'
