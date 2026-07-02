@@ -184,6 +184,6 @@ Sorting these out taught me more than any tutorial would've.
 
 ## About me
 
-**Ansh Maheshwarii** — focused on cloud, DevOps, and infrastructure. Building projects like this instead of just grinding tutorials.
+**Ansh Maheshwarii** — focused on cloud, DevOps, and infrastructure. Building projects like this instead of just watching tutorials.
 
 GitHub: [github.com/AnshMaheshwarii](https://github.com/AnshMaheshwarii)
